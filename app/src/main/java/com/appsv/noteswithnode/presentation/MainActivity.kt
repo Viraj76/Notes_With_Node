@@ -36,6 +36,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(color = colorResource(id = R.color.dark_blue))
                 ){
+
                     SetupNavHost()
                 }
             }

@@ -1,5 +1,6 @@
 package com.appsv.noteswithnode.presentation.add_notes
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,9 +34,13 @@ import com.appsv.noteswithnode.R
 import com.appsv.noteswithnode.presentation.add_notes.component.AddNoteToolBar
 import com.appsv.noteswithnode.presentation.add_notes.component.CustomFilterChip
 
-@Preview
+
 @Composable
-fun AddNoteScreen(modifier: Modifier = Modifier) {
+fun AddNoteScreen(
+    modifier: Modifier = Modifier,
+    state: StateAddNoteScreen,
+    event: (EventAddNoteScreen) -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -56,8 +62,11 @@ fun AddNoteScreen(modifier: Modifier = Modifier) {
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    value = "Note Title",
-                    onValueChange = { },
+                    value = state.notesTitle,
+                    onValueChange = { newTitle ->
+                        event(EventAddNoteScreen.NotesTitle(newTitle))
+                    },
+                    label = { Text(text = "Enter notes title...") },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = colorResource(id = R.color.medium_blue),
                         unfocusedBorderColor = colorResource(id = R.color.medium_blue),
@@ -65,7 +74,9 @@ fun AddNoteScreen(modifier: Modifier = Modifier) {
                         unfocusedTextColor = colorResource(id = R.color.white),
                         focusedContainerColor = colorResource(id = R.color.medium_blue),
                         unfocusedContainerColor = colorResource(id = R.color.medium_blue),
-                    ),
+
+                        ),
+                    maxLines = 2,
                     shape = RoundedCornerShape(5.dp)
                 )
 
@@ -75,8 +86,11 @@ fun AddNoteScreen(modifier: Modifier = Modifier) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(300.dp),
-                    value = "Note desc",
-                    onValueChange = { },
+                    value = state.notesDescription,
+                    onValueChange = {
+                        event(EventAddNoteScreen.NotesDescription(it))
+                    },
+                    label = { Text(text = "Enter note description...") },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = colorResource(id = R.color.medium_blue),
                         unfocusedBorderColor = colorResource(id = R.color.medium_blue),
@@ -85,6 +99,7 @@ fun AddNoteScreen(modifier: Modifier = Modifier) {
                         focusedContainerColor = colorResource(id = R.color.medium_blue),
                         unfocusedContainerColor = colorResource(id = R.color.medium_blue),
                     ),
+                    maxLines = 10,
                     shape = RoundedCornerShape(5.dp)
                 )
 
@@ -92,36 +107,30 @@ fun AddNoteScreen(modifier: Modifier = Modifier) {
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp,Alignment.End),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.End),
                 ) {
                     CustomFilterChip(
                         label = "Low",
                         color = Color.Green,
-                        selected = lowSelected,
+                        selected = state.notesPriority == "Low",
                         onClick = {
-                            lowSelected = !lowSelected
-                            highSelected = false
-                            mediumSelected = false
+                            event(EventAddNoteScreen.NotesPriority("Low"))
                         }
                     )
                     CustomFilterChip(
                         label = "Medium",
                         color = Color.Yellow,
-                        selected = mediumSelected,
+                        selected = state.notesPriority == "Medium",
                         onClick = {
-                            mediumSelected = !mediumSelected
-                            lowSelected = false
-                            highSelected = false
+                            event(EventAddNoteScreen.NotesPriority("Medium"))
                         }
                     )
                     CustomFilterChip(
                         label = "High",
                         color = Color.Red,
-                        selected = highSelected,
+                        selected = state.notesPriority == "High",
                         onClick = {
-                            highSelected = !highSelected
-                            mediumSelected = false
-                            lowSelected = false
+                            event(EventAddNoteScreen.NotesPriority("High"))
                         }
                     )
 
@@ -132,7 +141,9 @@ fun AddNoteScreen(modifier: Modifier = Modifier) {
         }
 
         FloatingActionButton(
-            onClick = { /* Do something */ },
+            onClick = {
+                      Log.d("notessss" , "${state.notesTitle}  ${state.notesDescription}")
+            },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(30.dp),
