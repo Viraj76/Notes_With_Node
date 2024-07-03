@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppStartingTheme" parent="Theme.SplashScreen">
+
+        <item name="windowSplashScreenBackground">@color/splash_back</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/writing</item>
+        <item name="postSplashScreenTheme">@style/Theme.NotesWithNode</item>
+
+    </style>
+</resources>
